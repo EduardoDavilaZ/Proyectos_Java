@@ -19,7 +19,7 @@ public class Controlador {
     private int segundos;
 
     static final int NUM = 10;
-    static final int BOMBAS = 10;
+    static final int BOMBAS = 4;
 
     public Controlador() {
         modelo = new Modelo(NUM, BOMBAS);
@@ -104,11 +104,18 @@ public class Controlador {
     	}
     }
     
-    private boolean validar() {
+    private boolean validar(int b) {
+        if (b != BOMBAS) return false; // Banderas = Bombas
+
         for (int i = 0; i < NUM; i++) {
             for (int j = 0; j < NUM; j++) {
                 Casilla c = modelo.getTableroGrafico().getTablero().casillas[i][j];
-                if (!c.isBomba() && !c.isAbierto()) { // Si una casilla no es bomba y no está abierta, aún no gana
+
+                if (!c.isBomba() && !c.isAbierto()) { // Todas las casillas deben estar abiertas
+                    return false;
+                }
+
+                if (c.isBandera() && !c.isBomba()) { // Toda bomba debe tener una bandera
                     return false;
                 }
             }
@@ -127,12 +134,12 @@ public class Controlador {
                 if (SwingUtilities.isRightMouseButton(e)) {
                     modelo.cambiarBandera(i, j); // Cambiar bandera
                     
-                    int puestas = contarBanderas(); // Actualizar contador de banderas restantes
-                    vista.setContadorBanderas(BOMBAS - puestas);
+                    int banderas = contarBanderas();
+                    vista.setContadorBanderas(BOMBAS - banderas);
                 } else {
                     modelo.revelar(i, j);
-                    
-                    if (validar()) {
+                    int banderas = contarBanderas(); 
+                    if (validar(banderas)) {
                     	finDeJuego(true);
                     }
                     

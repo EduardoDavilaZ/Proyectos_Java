@@ -100,15 +100,13 @@ public class Vista extends JFrame implements Estilos {
 
     public void setCaraFeliz() {
         jbtCara.setIcon(new ImageIcon(
-            new ImageIcon(getClass().getResource("/img/caraFeliz.png"))
-            .getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)
+            new ImageIcon(getClass().getResource("/img/caraFeliz.png")).getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)
         ));
     }
 
     public void setCaraTriste() {
         jbtCara.setIcon(new ImageIcon(
-            new ImageIcon(getClass().getResource("/img/caraTriste.png"))
-            .getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)
+            new ImageIcon(getClass().getResource("/img/caraTriste.png")).getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)
         ));
     }
 
