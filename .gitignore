@@ -1,0 +1,43 @@
+# === Eclipse ===
+.classpath
+.project
+.settings/
+.metadata/
+
+# === Archivos compilados de Java ===
+*.class
+bin/
+target/
+
+# === Build tools ===
+# Maven
+log/
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Gradle
+.gradle/
+build/
+
+# === Archivos temporales ===
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+
+# === Archivos del sistema ===
+.DS_Store
+Thumbs.db
+
+# === Archivos personales de Eclipse ===
+*.prefs
+
+# === Archivos de paquetes ===
+*.jar
+*.war
+*.ear
