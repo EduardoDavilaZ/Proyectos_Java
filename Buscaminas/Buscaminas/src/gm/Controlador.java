@@ -28,7 +28,6 @@ public class Controlador {
         configurarListeners();
         configurarTimer();
         reiniciar();
-        iniciarJuego();
     }
 
     private void configurarListeners() { 

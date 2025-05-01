@@ -8,8 +8,9 @@ import ui.Estilos;
  * Panel gráfico del tablero: dibuja casillas según el objeto Tablero.
  */
 public class TableroGrafico extends JPanel implements Estilos {
-
-    private int num;
+	private static final long serialVersionUID = 1L;
+	
+	private int num;
     private int bombas;
     private Tablero tablero;
 
