@@ -1,0 +1,34 @@
+package gm;
+
+import obj.Modelo;
+import ui.Vista;
+
+public class Controlador {
+
+    private Modelo modelo;
+    private Vista vista;
+    //private Timer cronometro;
+    private int segundos;
+
+    static final int NUM = 10;
+    static final int BOMBAS = 15;
+
+    public Controlador() {
+        // 1) Crear el modelo y la vista, inyectando el panel desde el modelo
+        modelo = new Modelo(NUM, BOMBAS);
+        vista  = new Vista(modelo.getTableroGrafico());
+
+        // 2) Configurar listeners y temporizador
+        /*configurarListeners();
+        configurarTimer();*/
+
+        // 3) Iniciar la partida
+        iniciarJuego();
+    }
+
+	
+	public void iniciarJuego() {
+		
+	}
+}
+

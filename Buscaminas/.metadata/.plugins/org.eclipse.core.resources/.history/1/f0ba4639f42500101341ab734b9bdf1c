@@ -1,0 +1,53 @@
+package obj;
+
+import javax.swing.JButton;
+
+public class Casilla extends JButton {
+	private static final long serialVersionUID = 1L;
+	
+	int numero;
+	boolean abierto;
+	boolean bomba;
+	boolean bandera;
+
+	public Casilla(boolean bomba) {
+		this.bomba = bomba;
+		numero = 0;
+	}
+	
+	public Casilla(int numero) {
+		this.numero = numero;
+	}
+	
+	public int getNumero() {
+		return numero;
+	}
+
+	public void setNumero(int numero) {
+		this.numero = numero;
+	}
+
+	public boolean isAbierto() {
+		return abierto;
+	}
+
+	public void setAbierto(boolean abierto) {
+		this.abierto = abierto;
+	}
+
+	public boolean isBomba() {
+		return bomba;
+	}
+
+	public void setBomba(boolean bomba) {
+		this.bomba = bomba;
+	}
+
+	public boolean isBandera() {
+		return bandera;
+	}
+
+	public void setBandera(boolean bandera) {
+		this.bandera = bandera;
+	}
+}

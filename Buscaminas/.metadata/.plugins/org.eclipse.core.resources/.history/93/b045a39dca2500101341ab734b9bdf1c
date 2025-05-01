@@ -1,0 +1,71 @@
+package ui;
+
+import java.awt.*;
+import javax.swing.*;
+
+public class Vista extends JFrame implements Estilos{
+
+	private JPanel jpnNorte;
+	private JPanel jpnCentro;
+	
+	public Vista() {
+		inicializarFrame();
+	}
+
+	private void inicializarFrame() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(true);
+		setSize(700, 500);
+		setLocationRelativeTo(null);
+		setLayout(new BorderLayout());
+		inicializarPaneles();
+		setVisible(true);
+	}
+	
+	private void inicializarPaneles() {
+		jpnNorte = new JPanel();
+		jpnCentro = new JPanel();
+		
+		jpnNorte.setPreferredSize(new Dimension(500, 50));
+		jpnCentro.setPreferredSize(new Dimension(500, 650));
+		
+		jpnNorte.setBackground(fondo1);
+		jpnCentro.setBackground(fondo2);
+		
+		componentesNorte();
+		componentesCentro();
+		
+		add(jpnNorte, BorderLayout.NORTH);
+		add(jpnCentro, BorderLayout.CENTER);
+	}
+	
+	private void componentesNorte() {
+		JLabel jlbTiempo = new JLabel("00:00");
+		JButton jbtCara = new JButton();
+		JLabel jlbBombas = new JLabel("0");
+		
+		jlbTiempo.setFont(fuente2);
+		jlbBombas.setFont(fuente2);
+		
+		Estilos.configurarBoton(jbtCara);
+		
+		jpnNorte.setLayout(null);
+		jlbTiempo.setBounds(80, 0, 50, 50);
+		
+		
+		jpnNorte.add(jlbTiempo);
+		jpnNorte.add(jlbBombas);
+		jpnNorte.add(jbtCara);
+	}
+	
+	
+	private void componentesCentro() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void main(String[] args) {
+		new Vista();
+	}
+
+}

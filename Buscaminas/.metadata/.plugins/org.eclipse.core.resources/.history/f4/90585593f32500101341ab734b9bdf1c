@@ -1,0 +1,9 @@
+package obj;
+
+public class TableroGrafico {
+
+	public TableroGrafico() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

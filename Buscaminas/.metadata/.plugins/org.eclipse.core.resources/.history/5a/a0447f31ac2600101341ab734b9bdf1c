@@ -1,0 +1,148 @@
+package gm;
+
+import obj.Casilla;
+import obj.Modelo;
+import ui.Estilos;
+import ui.Vista;
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class Controlador {
+
+    private final Modelo modelo;
+    private final Vista vista;
+    private Timer cronometro;
+    private int segundos;
+
+    static final int NUM = 10;
+    static final int BOMBAS = 3;
+
+    public Controlador() {
+        modelo = new Modelo(NUM, BOMBAS);
+        vista  = new Vista(modelo.getTableroGrafico());
+
+        configurarListeners();
+        configurarTimer();
+        reiniciar();
+        iniciarJuego();
+    }
+
+    private void configurarListeners() { 
+        int n = modelo.getNum();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                final int fi = i, fj = j;
+                listenerCasilla(fi, fj); // Mouse Listener
+            }
+        }
+    }
+
+    private int contarBanderas() {
+        int cont = 0;
+        int n = modelo.getNum();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (modelo.getTableroGrafico().getTablero().casillas[i][j].isBandera()) {
+                    cont++;
+                }
+            }
+        }
+        return cont;
+    }
+
+    private void configurarTimer() {
+        segundos = 0;
+        cronometro = new Timer(1000, e -> {
+            segundos++;
+            int m = segundos / 60;
+            int s = segundos % 60;
+            vista.setTiempo(String.format("%02d:%02d", m, s));
+        });
+    }
+
+    public void iniciarJuego() {
+        modelo.reiniciarJuego();
+        vista.setCaraFeliz();
+        vista.setContadorBanderas(BOMBAS);
+        segundos = 0;
+        vista.setTiempo("00:00");
+
+        configurarListeners();
+
+        cronometro.start();
+    }
+    
+    public void reiniciar() {
+    	vista.jbtCara.addActionListener(e-> {
+    		iniciarJuego();
+    	});
+    }
+
+    private void finDeJuego(boolean gano) {
+        cronometro.stop();
+        if (gano) {
+            vista.setCaraFeliz();
+            JOptionPane.showMessageDialog(null, "Has ganado!");
+        } else {
+            vista.setCaraTriste();
+            mostrarBombas();
+        }
+    }
+    
+    private void mostrarBombas() {
+    	for (int i=0; i < NUM; i++) {
+    		for (int j=0; j < NUM; j++) {
+    			Casilla c = modelo.getTableroGrafico().getTablero().casillas[i][j];
+    			c.setAbierto(true);
+    			c.setBackground(Estilos.fondo4);
+    			modelo.actualizarCasilla(i, j);
+    		}
+    	}
+    }
+    
+    private boolean validar() {
+        for (int i = 0; i < NUM; i++) {
+            for (int j = 0; j < NUM; j++) {
+                Casilla c = modelo.getTableroGrafico().getTablero().casillas[i][j];
+
+                // Si una casilla no es bomba y no está abierta, aún no gana
+                if (!c.isBomba() && !c.isAbierto()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    private void listenerCasilla(int i, int j) {
+    	vista.setListenerCasilla(i, j, new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (modelo.getTableroGrafico().getTablero().casillas[i][j].isAbierto()) {
+                    return; // Retorna si ya está abierta
+                }
+
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    modelo.cambiarBandera(i, j); // Cambiar bandera
+                    
+                    int puestas = contarBanderas(); // Actualizar contador de banderas restantes
+                    vista.setContadorBanderas(BOMBAS - puestas);
+                } else {
+                    modelo.revelar(i, j);
+                    
+                    if (validar()) {
+                    	finDeJuego(true);
+                    }
+                    
+                    if (modelo.getTableroGrafico().getTablero().casillas[i][j].isBomba()) {
+                        finDeJuego(false); // Perdió
+                    }
+                }
+            }
+        });
+    }
+}

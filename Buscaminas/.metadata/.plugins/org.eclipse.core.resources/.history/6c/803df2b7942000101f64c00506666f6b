@@ -1,0 +1,9 @@
+package obj;
+
+public class Casilla {
+
+	public Casilla() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

@@ -1,0 +1,37 @@
+package obj;
+
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
+public class Modelo extends TableroGrafico {
+
+	public Modelo(int num, int bombas) {
+		super(num, bombas);
+	}
+	
+	public void revelarCasilla(int i, int j) {
+		if (t.casillas[i][j].getNumero() != 0) {
+			t.casillas[i][j].setText(String.valueOf(t.casillas[i][j].getNumero()));
+		}
+		
+		if (t.casillas[i][j].isBomba() && !t.casillas[i][j].isBandera()) {
+        	t.casillas[i][j].setIcon(new ImageIcon(new ImageIcon(getClass().getResource("/img/bomba.png")).getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+        	perdio(i, j);
+		}
+	}
+	
+	public void colorcarBandera(int i, int j) {
+		if (!t.casillas[i][j].isBandera()) {
+        	t.casillas[i][j].setIcon(new ImageIcon(new ImageIcon(getClass().getResource("/img/bandera.png")).getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+        }
+	}
+	
+	public boolean perdio(int i, int j) {
+		if (t.casillas[i][j].isBomba()) {
+			return true;
+		}
+		return false;
+	}
+	
+}

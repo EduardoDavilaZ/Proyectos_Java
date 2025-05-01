@@ -1,0 +1,16 @@
+package app;
+
+import obj.Modelo;
+import ui.Vista;
+import gm.Controlador;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Modelo m = new Modelo();
+		Vista v = new Vista(10, 15);
+		Controlador c = new Controlador(m, v);
+		
+	}
+
+}

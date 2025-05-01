@@ -1,0 +1,14 @@
+package ui;
+
+import java.awt.*;
+
+public interface Estilos {
+	Font fuente1 = new Font("Comic Sans MS", Font.BOLD, 18);
+	Font fuente2 = new Font("Comic Sans MS", Font.BOLD, 26);
+	Font fuente3 = new Font("Comic Sans MS", Font.ITALIC, 16);
+	
+	Color fondo1 = new Color(230, 230, 230); // Gris claro
+	Color fondo2 = new Color(192, 192, 192); // Gris
+	Color fondo3 = new Color(102, 102, 102); // Gris oscuro
+	Color fondo4 = new Color(255, 255, 255);
+}

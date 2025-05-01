@@ -1,0 +1,37 @@
+package obj;
+
+import java.awt.GridLayout;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import ui.Estilos;
+
+public class TableroGrafico extends JPanel implements Estilos{
+
+	private int num;
+	private int bombas;
+	
+	public TableroGrafico(int num, int bombas) {
+		this.num = num;
+		this.bombas = bombas;
+		crearVentana();
+	}
+	
+	public void crearVentana() {
+		setSize(500, 650);
+		setBackground(fondo1);
+		dibujarTablero();
+	}
+	
+	private void dibujarTablero() {
+		Tablero t = new Tablero(num, bombas);
+		setLayout(new GridLayout(num, num, 10, 10));
+		for (int i = 0; i < num; i++) {
+		    for (int j = 0; j < num; j++) {
+		        t.casillas[i][j] = new Casilla();
+		        add(t.casillas[i][j]);
+		    }
+		}
+	}
+
+}

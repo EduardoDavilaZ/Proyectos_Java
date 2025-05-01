@@ -1,0 +1,66 @@
+package obj;
+
+import java.util.Random;
+
+public class Tablero {
+
+	private int num;
+	private int bombas;
+	public Casilla[][] casillas;
+	
+	public Tablero(int num, int bombas) {
+		this.num = num;
+		this.bombas = bombas;
+		casillas = new Casilla[num][num];
+		inicializarCasillas();
+		generarBombas();
+		generarNumeros();
+	}
+	
+	public void inicializarCasillas() {
+		for (int i = 0; i < num; i++) {
+			for (int j = 0; j < num; j++) {
+				casillas[i][j] = new Casilla();
+			}
+		}
+	}
+
+	private void generarBombas() {
+		Random rand = new Random();
+		int i = bombas;
+		while(i > 0){
+			int x = rand.nextInt(num);
+			int y = rand.nextInt(num);
+			if (!casillas[x][y].isBomba()) {
+				casillas[x][y].setBomba(true);
+				i--;
+			}
+		}	
+	}
+	 
+	public void generarNumeros() {
+		for (int i=0; i<num; i++) {
+			for (int j=0; j<num; j++) {
+				if (!casillas[i][j].isBomba()) {
+					int s = sumarBombas(i, j);
+					casillas[i][j].setNumero(s);
+				}
+			}
+		}
+	}
+	
+	private int sumarBombas(int a, int b) {
+		int s = 0;
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				int ii = a + i;
+				int jj = b + j;
+				if (ii >= 0 && ii < num && jj >= 0 && jj < num && casillas[ii][jj].isBomba()) {
+					s++;
+				}
+			}
+		}
+		return s;
+	}
+	
+}

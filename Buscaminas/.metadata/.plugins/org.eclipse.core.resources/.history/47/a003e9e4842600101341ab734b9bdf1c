@@ -1,0 +1,9 @@
+package gm;
+
+public class Mecanica {
+
+	public Mecanica() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

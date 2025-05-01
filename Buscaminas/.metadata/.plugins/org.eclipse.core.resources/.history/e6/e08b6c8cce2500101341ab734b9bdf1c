@@ -1,0 +1,87 @@
+package ui;
+
+import java.awt.*;
+import javax.swing.*;
+
+public class Vista extends JFrame implements Estilos{
+
+	private JPanel jpnNorte;
+	private JPanel jpnCentro;
+	
+	public Vista() {
+		inicializarFrame();
+	}
+
+	private void inicializarFrame() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(true);
+		setSize(700, 500);
+		setLocationRelativeTo(null);
+		setLayout(new BorderLayout());
+		inicializarPaneles();
+		setVisible(true);
+	}
+	
+	private void inicializarPaneles() {
+		jpnNorte = new JPanel();
+		jpnCentro = new JPanel();
+		
+		jpnNorte.setPreferredSize(new Dimension(500, 50));
+		jpnCentro.setPreferredSize(new Dimension(500, 650));
+		
+		jpnNorte.setBackground(fondo1);
+		jpnCentro.setBackground(fondo2);
+		
+		componentesNorte();
+		componentesCentro();
+		
+		add(jpnNorte, BorderLayout.NORTH);
+		add(jpnCentro, BorderLayout.CENTER);
+	}
+	
+	private void componentesNorte() { //Quiero que todos los componentes tengan el mismo ancho, así como un padding, porque el jlbTiempo esta ocupando más que los demás componentes. quiero saber por que el botón no responde al ponerle el setPreferedSize si ya se le está dando dimensiones en la interfaz Estilos.
+		JLabel jlbTiempo = new JLabel("00:00");
+		JButton jbtCara = new JButton();
+		JLabel jlbBombas = new JLabel("0");
+		
+		jlbTiempo.setFont(fuente2);
+		jlbBombas.setFont(fuente2);
+		
+		Estilos.configurarBoton(jbtCara);
+
+		jpnNorte.setLayout(new GridLayout(1, 3, 20, 10));
+
+		jpnNorte.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+	    // Paneles contenedores con FlowLayout centrado
+	    JPanel pnlTiempo = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+	    JPanel pnlCara = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+	    JPanel pnlBombas = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+
+	    // Fondo opcional para los paneles contenedores
+	    pnlTiempo.setOpaque(false);
+	    pnlCara.setOpaque(false);
+	    pnlBombas.setOpaque(false);
+
+	    // Agregar componentes a sus paneles
+	    pnlTiempo.add(jlbTiempo);
+	    pnlCara.add(jbtCara);
+	    pnlBombas.add(jlbBombas);
+
+	    // Agregar los paneles al jpnNorte
+	    jpnNorte.add(pnlTiempo);
+	    jpnNorte.add(pnlCara);
+	    jpnNorte.add(pnlBombas);
+	}
+	
+	
+	private void componentesCentro() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void main(String[] args) {
+		new Vista();
+	}
+
+}

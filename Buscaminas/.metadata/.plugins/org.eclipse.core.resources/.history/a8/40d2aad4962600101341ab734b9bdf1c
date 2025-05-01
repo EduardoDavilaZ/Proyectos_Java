@@ -1,0 +1,121 @@
+package obj;
+
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import ui.Estilos;
+
+/**
+ * Modelo: puente entre la lógica de Tablero y su representación gráfica.
+ */
+public class Modelo{
+    private final int num;
+    private final int bombas;
+    private Tablero tablero;
+    private final TableroGrafico tableroGrafico;
+
+    public Modelo(int num, int bombas) {
+        this.num = num;
+        this.bombas = bombas;
+        this.tablero = new Tablero(num, bombas);
+        this.tableroGrafico = new TableroGrafico(num, bombas);
+    }
+
+    /**
+     * Devuelve el panel gráfico para incrustar en la Vista.
+     */
+    public TableroGrafico getTableroGrafico() {
+        return tableroGrafico;
+    }
+
+    /**
+     * Reinicia la mecánica y la vista del tablero.
+     */
+    public void reiniciarJuego() {
+        // 1) nuevo tablero de datos
+        tablero = new Tablero(num, bombas);
+        // 2) redibujar componentes gráficos
+        tableroGrafico.redibujar(tablero);
+    }
+
+    /**
+     * Actualiza la casilla i,j en la vista según su estado en el modelo de datos.
+     */
+    public void actualizarCasilla(int i, int j){
+        Casilla c = tablero.casillas[i][j];
+        if (c.isBandera()) {
+            mostrarBanderaIcono(c);
+        } else if (c.isAbierto()) {
+            if (c.isBomba()) {
+                mostrarBombaIcono(c);
+            } else if (c.getNumero() > 0) {
+                c.setText(String.valueOf(c.getNumero()));
+                c.setFont(Estilos.fuente3);
+            }
+        }
+    }
+
+    /**
+     * Coloca o quita una bandera y actualiza el icono.
+     */
+    public void toggleBandera(int i, int j) {
+        Casilla c = tablero.casillas[i][j];
+        c.setBandera(!c.isBandera());
+        if (c.isBandera()) mostrarBanderaIcono(c);
+        else c.setIcon(null);
+    }
+
+    private void mostrarBombaIcono(Casilla c) {
+        c.setIcon(new ImageIcon(
+            new ImageIcon(getClass().getResource("/img/bomba.png"))
+            .getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)
+        ));
+    }
+
+    private void mostrarBanderaIcono(Casilla c) {
+        c.setIcon(new ImageIcon(
+            new ImageIcon(getClass().getResource("/img/bandera.png"))
+            .getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)
+        ));
+    }
+    
+    /**
+     * Revela la casilla (i,j). 
+     * Si tiene número 0 y no es bomba ni bandera, propaga recursivamente
+     * a los cuatro vecinos (arriba, abajo, izquierda, derecha).
+     */
+    public void revelarYPropagar(int i, int j) {
+        Casilla c = tablero.casillas[i][j];
+        if (c.isBomba() && !c.isBandera()) {
+            c.setAbierto(true);
+            mostrarBombaIcono(c);
+            return;
+        }
+
+        // Si ya estaba abierta o tenía bandera, salimos
+        if (c.isAbierto() || c.isBandera()) return;
+
+        // Marcamos como abierta y actualizamos su vista
+        c.setAbierto(true);
+        actualizarCasilla(i, j);
+
+        // Si el número es 0, propagar a vecinos ortogonales
+        if (c.getNumero() == 0) {
+            // Arriba
+            if (i - 1 >= 0)           revelarYPropagar(i - 1, j);
+            // Abajo
+            if (i + 1 < num)         revelarYPropagar(i + 1, j);
+            // Izquierda
+            if (j - 1 >= 0)           revelarYPropagar(i, j - 1);
+            // Derecha
+            if (j + 1 < num)         revelarYPropagar(i, j + 1);
+        }
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public int getBombas() {
+        return bombas;
+    }
+}

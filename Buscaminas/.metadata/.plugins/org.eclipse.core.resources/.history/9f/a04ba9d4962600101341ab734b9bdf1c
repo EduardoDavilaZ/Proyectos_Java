@@ -1,0 +1,127 @@
+package gm;
+
+import obj.Modelo;
+import ui.Vista;
+
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class Controlador {
+
+    private final Modelo modelo;
+    private final Vista vista;
+    private Timer cronometro;
+    private int segundos;
+
+    static final int NUM = 10;
+    static final int BOMBAS = 15;
+
+    public Controlador() {
+        // 1) Crear el modelo y la vista, inyectando el panel desde el modelo
+        modelo = new Modelo(NUM, BOMBAS);
+        vista  = new Vista(modelo.getTableroGrafico());
+
+        // 2) Configurar listeners y temporizador
+        configurarListeners();
+        configurarTimer();
+
+        // 3) Iniciar la partida
+        iniciarJuego();
+    }
+
+    /** Configura el MouseListener sobre cada casilla. */
+    private void configurarListeners() {
+        int n = modelo.getNum();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                final int fi = i, fj = j;
+                vista.setListenerCasilla(fi, fj, new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        // Si ya está abierta, no hacer nada
+                        if (modelo.getTableroGrafico().getTablero().casillas[fi][fj].isAbierto()) {
+                            return;
+                        }
+
+                        if (SwingUtilities.isRightMouseButton(e)) {
+                            // Toggle bandera
+                            modelo.toggleBandera(fi, fj);
+                            // Actualizar contador de banderas restantes
+                            int puestas = contarBanderas();
+                            vista.setContadorBanderas(BOMBAS - puestas);
+                        } else {
+                            // Revelar casilla
+                            // Primero marca abierta para evitar reclics
+                            modelo.getTableroGrafico().getTablero().casillas[fi][fj].setAbierto(true);
+                            if (modelo.getTableroGrafico().getTablero().casillas[fi][fj].getNumero() == 0) {
+                                modelo.revelarYPropagar(fi, fj);
+                            } else {
+                                modelo.actualizarCasilla(fi, fj);
+                            }
+                            
+                            // Si era bomba, fin de juego
+                            if (modelo.getTableroGrafico().getTablero().casillas[fi][fj].isBomba()) {
+                                finDeJuego(false);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    /** Cuenta cuántas banderas están puestas en el tablero. */
+    private int contarBanderas() {
+        int cuenta = 0;
+        int n = modelo.getNum();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (modelo.getTableroGrafico().getTablero().casillas[i][j].isBandera()) {
+                    cuenta++;
+                }
+            }
+        }
+        return cuenta;
+    }
+
+    /** Configura el Timer que actualiza el reloj cada segundo. */
+    private void configurarTimer() {
+        segundos = 0;
+        cronometro = new Timer(1000, e -> {
+            segundos++;
+            int min = segundos / 60;
+            int seg = segundos % 60;
+            vista.setTiempo(String.format("%02d:%02d", min, seg));
+        });
+    }
+
+    /** Arranca (o reinicia) la partida: datos, vista y cronómetro. */
+    public void iniciarJuego() {
+        // 1) Reiniciar modelo y vista
+        modelo.reiniciarJuego();
+        vista.setCaraFeliz();
+        vista.setContadorBanderas(BOMBAS);
+        segundos = 0;
+        vista.setTiempo("00:00");
+
+        // 2) (Re)configurar listeners pues las casillas nuevas tienen listeners previos
+        configurarListeners();
+
+        // 3) Arrancar el cronómetro
+        cronometro.start();
+    }
+
+    /** Finaliza la partida: detiene el cronómetro y muestra cara según resultado. */
+    private void finDeJuego(boolean gano) {
+        cronometro.stop();
+        if (gano) {
+            vista.setCaraFeliz();
+            // Aquí podrías mostrar un diálogo de victoria
+        } else {
+            vista.setCaraTriste();
+            // Aquí podrías mostrar un diálogo de derrota
+        }
+    }
+}

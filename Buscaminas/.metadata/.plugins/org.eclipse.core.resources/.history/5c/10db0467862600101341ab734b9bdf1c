@@ -1,0 +1,24 @@
+package gm;
+
+import obj.Modelo;
+import ui.Vista;
+
+public class Controlador {
+
+	private Modelo m;
+	private Vista v;
+	
+	static final int num = 10;
+	static final int bombas = 15;
+	
+	public Controlador() {
+		m = new Modelo(num, bombas);
+		v = new Vista(num, bombas);
+		iniciarJuego();
+	}
+	
+	public void iniciarJuego() {
+		
+	}
+}
+

@@ -1,0 +1,77 @@
+package ui;
+
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.plaf.basic.BasicButtonUI;
+
+import obj.Casilla;
+
+public interface Estilos {
+	Font fuente1 = new Font("Comic Sans MS", Font.BOLD, 18); 
+	Font fuente2 = new Font("Consolas", Font.BOLD, 48 );
+	Font fuente3 = new Font("Consolas", Font.PLAIN, 16); 
+	
+	Color fondo1 = new Color(230, 230, 230); // Gris claro
+	Color fondo2 = new Color(192, 192, 192); // Gris
+	Color fondo3 = new Color(102, 102, 102); // Gris oscuro
+	Color fondo4 = new Color(255, 255, 255); // Blanco
+	
+	Color color = new Color(67, 67, 67); // Negro
+	Color color1 = new Color(6, 0, 191); // Azul
+	Color color2 = new Color(0, 144, 22); // Verde
+	Color color3 = new Color(222, 0, 0); // Rojo
+	Color color4 = new Color(0, 15, 111); // Azul oscuro
+	Color color5 = new Color(145, 0, 0); // Rojo oscuro
+	Color color6 = new Color(0, 182, 163); // Cian
+	
+	public static void configurarBoton(JButton boton) {
+	    boton.setPreferredSize(new Dimension(40, 40));
+	    boton.setBackground(fondo2);
+	    boton.setFocusPainted(false);
+	    boton.setContentAreaFilled(false);
+	    boton.setBorderPainted(false);
+
+	    hover(boton, 30);
+	}
+
+	public static void configurarCasilla(JButton boton) {
+	    boton.setPreferredSize(new Dimension(40, 40));
+	    boton.setBackground(fondo2);
+	    boton.setFont(fuente2);
+	    boton.setFocusPainted(false);
+	    boton.setContentAreaFilled(false);
+	    boton.setBorderPainted(false);
+
+	    hover(boton, 0);
+	}
+	
+	public static void hover(JButton boton, int radio) {
+	    boton.addMouseListener(new MouseAdapter() {
+	        public void mouseEntered(MouseEvent e) {
+	            boton.setBackground(fondo3);
+	        }
+	        public void mouseExited(MouseEvent e) {
+	            if (boton instanceof Casilla && ((Casilla) boton).isAbierto()) { // Comprobar si está abierta
+	                boton.setBackground(fondo4);
+	            } else {
+	                boton.setBackground(fondo2);
+	            }
+	        }
+	    });
+
+	    boton.setUI(new BasicButtonUI() {
+	        @Override
+	        public void paint(Graphics g, JComponent c) {
+	            Graphics2D g2 = (Graphics2D) g;
+	            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	            g2.setColor(c.getBackground());
+	            g2.fillRoundRect(0, 0, boton.getWidth(), boton.getHeight(), radio, radio);
+	            super.paint(g2, c);
+	        }
+	    });
+	}
+}

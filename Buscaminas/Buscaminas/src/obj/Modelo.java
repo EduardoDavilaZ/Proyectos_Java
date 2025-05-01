@@ -1,0 +1,114 @@
+package obj;
+
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
+
+import ui.Estilos;
+ 
+public class Modelo{
+    private final int num;
+    private final int bombas;
+    private Tablero tablero;
+    private final TableroGrafico tableroGrafico;
+
+    public Modelo(int num, int bombas) {
+        this.num = num;
+        this.bombas = bombas;
+        this.tablero = new Tablero(num, bombas);
+        this.tableroGrafico = new TableroGrafico(num, bombas);
+    }
+
+    public TableroGrafico getTableroGrafico() { // Esto lo mandaré a la vista
+        return tableroGrafico;
+    }
+
+    public void reiniciarJuego() {
+        tablero = new Tablero(num, bombas);
+        tableroGrafico.redibujar(tablero);
+    }
+
+    public void actualizarCasilla(int i, int j) {
+        Casilla c = tablero.casillas[i][j];
+
+        if (c.isBandera()) {
+            mostrarBanderaIcono(c);
+        } else if (c.isAbierto()) {
+            if (c.isBomba()) {
+                mostrarBombaIcono(c);
+            } else {
+                if (c.getNumero() > 0) {
+                    c.setText(String.valueOf(c.getNumero()));
+                    añadirColor(c);
+                    
+                } else {
+                    c.setText(""); // vacía
+                }
+                
+                c.setBackground(Estilos.fondo4); // cambia color
+                c.repaint();
+            }
+        }
+    }
+    
+    private void añadirColor(Casilla c) {
+    	c.setFont(Estilos.fuente3);
+    	switch(c.getNumero()) {
+    		case 1: c.setForeground(Estilos.color1); break;
+    		case 2: c.setForeground(Estilos.color2); break;
+    		case 3: c.setForeground(Estilos.color3); break;
+    		case 4: c.setForeground(Estilos.color4); break;
+    		case 5: c.setForeground(Estilos.color5); break;
+    		case 6: c.setForeground(Estilos.color6); break;
+    		default: c.setForeground(Estilos.color); break;
+    	}
+    }
+
+    public void cambiarBandera(int i, int j) {
+        Casilla c = tablero.casillas[i][j];
+        c.setBandera(!c.isBandera());
+        if (c.isBandera()) mostrarBanderaIcono(c);
+        else c.setIcon(null);
+    }
+
+    private void mostrarBombaIcono(Casilla c) {
+        c.setIcon(new ImageIcon(
+            new ImageIcon(getClass().getResource("/img/bomba.png")).getImage().getScaledInstance(40, 25, Image.SCALE_SMOOTH)
+        ));
+    }
+
+    private void mostrarBanderaIcono(Casilla c) {
+        c.setIcon(new ImageIcon(
+            new ImageIcon(getClass().getResource("/img/bandera.png")).getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)
+        ));
+    }
+    
+    public void revelar(int i, int j) {
+        if (i < 0 || i >= num || j < 0 || j >= num) return;
+
+        Casilla c = tablero.casillas[i][j];
+
+        if (c.isAbierto() || c.isBandera()) return;
+
+        c.setAbierto(true);
+
+        SwingUtilities.invokeLater(() -> {
+            actualizarCasilla(i, j);
+        });
+
+        if (c.getNumero() == 0) {
+        	revelar(i - 1, j);
+        	revelar(i + 1, j);
+        	revelar(i, j - 1);
+        	revelar(i, j + 1);
+        }
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public int getBombas() {
+        return bombas;
+    }
+}

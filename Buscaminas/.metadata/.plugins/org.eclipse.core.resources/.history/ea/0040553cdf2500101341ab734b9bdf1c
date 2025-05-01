@@ -1,0 +1,52 @@
+package ui;
+
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.plaf.basic.BasicButtonUI;
+
+public interface Estilos {
+	Font fuente1 = new Font("Comic Sans MS", Font.BOLD, 18);
+	Font fuente2 = new Font("Segoe UI", Font.BOLD, 36 );
+	Font fuente3 = new Font("Comic Sans MS", Font.ITALIC, 16);
+	
+	Color fondo1 = new Color(230, 230, 230); // Gris claro
+	Color fondo2 = new Color(192, 192, 192); // Gris
+	Color fondo3 = new Color(102, 102, 102); // Gris oscuro
+	Color fondo4 = new Color(255, 255, 255);
+	
+	
+	public static void configurarBoton(JButton boton) {
+	    boton.setPreferredSize(new Dimension(40, 40));
+	    boton.setBackground(fondo2);
+	    boton.setFont(fuente2);
+	    boton.setFocusPainted(false);
+	    boton.setContentAreaFilled(false);
+	    boton.setBorderPainted(false);
+
+	    boton.addMouseListener(new MouseAdapter() {
+	        public void mouseEntered(MouseEvent e) {
+	            boton.setBackground(fondo3);
+	        }
+	        public void mouseExited(MouseEvent e) {
+	            boton.setBackground(fondo2);
+	        }
+	    });
+
+	    boton.setUI(new BasicButtonUI() {
+	        @Override
+	        public void paint(Graphics g, JComponent c) {
+	            Graphics2D g2 = (Graphics2D) g;
+	            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	            g2.setColor(boton.getBackground());
+	            g2.fillRoundRect(0, 0, boton.getWidth(), boton.getHeight(), 30, 30);
+	            super.paint(g2, c);
+	        }
+	    });
+	}
+	
+	
+}
